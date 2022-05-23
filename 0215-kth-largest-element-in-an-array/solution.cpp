@@ -6,7 +6,7 @@ using ll = long long;
 class Solution {
 public:
     int findKthLargest(vector<int>& nums, int k) {
-        sort(nums.begin(), nums.end());
-        return nums[nums.size() - k];
+        partial_sort(nums.begin(), nums.begin() + k, nums.end(), greater<int>());
+        return nums[k - 1];
     }
 };
