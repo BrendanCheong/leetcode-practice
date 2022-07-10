@@ -1,5 +1,18 @@
 class Solution:
     def isPalindrome(self, s: str) -> bool:
-        processed = ''.join(filter(str.isalnum, s.lower()))
-        return processed == processed[::-1]
-        
+        """
+        O(n) loop, only one pass, with O(1) memory / space complexity
+        """
+        l, r = 0, len(s) - 1
+        while l < r:
+            if not s[l].isalnum():
+                l += 1
+            elif not s[r].isalnum():
+                r -= 1
+            else:
+                if s[l].lower() != s[r].lower():
+                    return False
+                else:
+                    l += 1
+                    r -= 1
+        return True
