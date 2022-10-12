@@ -9,13 +9,16 @@ class Solution:
         When there is a pair of leftovers that are inside the array, we have an answer.
         We can store each {ele: leftover} and check to see if the leftover is in the HashTable
         to create this pair, for each element.
+        
+        If not in there, we can form the pair in the HashTable using {leftover: index}
+        We use a HashTable for fast querying of O(1) time, we take O(n) time to loop through 
+        the whole HashTable
         """
         dct = dict()
-        for i in range(0, len(nums)):
-            leftover = target - nums[i]
-            if (leftover in dct):
+        for i, ele in enumerate(nums):
+            leftover = target - ele
+            if (leftover in dct): # if leftover is present
                 return [dct[leftover], i]
-            else:
-                dct[nums[i]] = i
+            dct[ele] = i # add the index to the hashmap
         return false
         
