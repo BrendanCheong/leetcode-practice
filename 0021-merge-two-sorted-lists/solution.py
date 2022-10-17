@@ -12,23 +12,34 @@ class Solution:
         if equal, choose one or the other
         if one of the nodes are empty, choose the non-emty one, if both empty choose either
         """
-        if not list1 or not list2:
-            # edge case, where one is empty, we return the non-empty one
-            # if both empty, return either one of the empty nodes
-            return list1 or list2
-        elif list1.val < list2.val:
-            # if the first pointer is smaller, we advance that pointer
-            # which is why list1 moves forward
-            # while the other pointer remains
-            list1.next = self.mergeTwoLists(list1.next, list2)
-            return list1
-        else:
-            # if equal pointer we just choose one or the other, doesn't matter
-            # if second pointer is smaller, we advance the second pointer
-            # while the other pointer remains
-            list2.next = self.mergeTwoLists(list1, list2.next)
-            return list2
-        # we return the list2/list1 to output the nodes
+        # if not list1 or not list2:
+        #     return list1 or list2
+        # elif list1.val <= list2.val:
+        #     list1.next = self.mergeTwoLists(list1.next, list2)
+        #     return list1
+        # elif list2.val <= list1.val:
+        #     list2.next = self.mergeTwoLists(list1, list2.next)
+        #     return list2
+        def iterative(list1: Optional[ListNode], list2: Optional[ListNode]):
+            prehead = ListNode(-1)
+            prev = prehead
+            
+            while list1 and list2:
+                if list1.val <= list2.val:
+                    prev.next = list1
+                    list1 = list1.next
+                elif list2.val <= list1.val:
+                    prev.next = list2
+                    list2 = list2.next
+                prev = prev.next
+                
+            prev.next = list1 if list1 is not None else list2
+            
+            return prehead.next
+        return iterative(list1, list2)
+                    
+            
+        
         
         
         
