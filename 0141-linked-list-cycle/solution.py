@@ -1,8 +1,8 @@
 # Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.next = None
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
@@ -10,14 +10,40 @@ class Solution:
         The naive solution, is in O(n) time where I am storing the past heads
         in memory or rather in a HashTable in O(1) time and to search for past
         values in O(1) time. If I encounter a visited value, then output True,
-        if I have reached the end then the next val is None, output False
+        if I have reached the end then the next val is None, output False.
+        
+        
+        Proper solution is to use Floyd's Cycle Finding Algo using two pointers
+        that runs in O(n - 1) time and O(1) memory with 2 pointers
+        
+        Both pointers start at the head, we move the slow pointer by 1, the fast
+        by 2 every iteration. Eventually they will meet in O(n-1) time.
         """
-        mem = set()
-        curr = head
-        while (head not in mem):
-            if (head == None):
-                return False
-            mem.add(head)
-            head = head.next
-        return True
+        def cycleHashVersion(head: Optional[ListNode]) -> bool:
+            mem = set()
+            curr = head
+            while (head not in mem): # keep checking if in memory
+                if (head == None):
+                    # we reached the end of the LL, its therefore no cycle
+                    return False
+                mem.add(head)
+                head = head.next
+            return True
+        def cyclePointerVersion(head: Optional[ListNode]) -> bool:
+            # 
+            slow, fast = head, head
+            
+            # make sure fast pointer is not null
+            # and fast.next not null, as we are shifting fast by 2 nodes
+            # so it could go out of bounds
+            # if null means we reached the end of LL, no cycles
+            while fast is not None and fast.next is not None:
+                slow = slow.next # progress by 1
+                fast = fast.next.next # progress by 2
+                if slow == fast:
+                    return True
+            return False
+                
+            
+        return cyclePointerVersion(head)
         
