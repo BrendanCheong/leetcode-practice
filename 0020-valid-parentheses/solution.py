@@ -6,19 +6,18 @@ class Solution:
         Edge cases: What if the string is equal to one?
         what if the string is (()), its still invalid!
         """
-        brackets: Dict[str] = {
-            '(': ')',
-            '{': '}',
-            '[': ']'
-        }
-        stack = list()
-        if len(s) == 1:
-            return False
-        for char in s:
-            if char in brackets:
-                stack.append(char)
+        Map = {")": "(", "]": "[", "}": "{"}
+        stack = []
+
+        for c in s:
+            if c not in Map:
+                stack.append(c)
                 continue
-            if not stack or brackets[stack.pop()] != char:
+            if not stack or stack[-1] != Map[c]:
                 return False
+            stack.pop()
 
         return not stack
+                
+            
+            
