@@ -2,10 +2,10 @@
 from collections import deque
 
 # Definition for a Node.
-# class Node:
-#     def __init__(self, val = 0, neighbors = None):
-#         self.val = val
-#         self.neighbors = neighbors if neighbors is not None else []
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
 
 class Solution:
     """
@@ -15,10 +15,10 @@ class Solution:
     """
     def bfs(self, node):
         graph = { node: Node(node.val) }
-        q = deque([node])
+        q = [node]
 
         while q:
-            curr = q.popleft() # a queue dequeues from head
+            curr = q.pop() # a queue dequeues from head
             for nei in curr.neighbors:
                 if nei not in graph:
                     graph[nei] = Node(nei.val)
@@ -30,6 +30,7 @@ class Solution:
                 # not connect curr.neighbors to nei.neighbors
                 graph[curr].neighbors.append(graph[nei])
         return graph
+
     def cloneGraph(self, node: 'Node') -> 'Node':
         # base case, if the node is None, return None
         if not node:
