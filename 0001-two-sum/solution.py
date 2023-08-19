@@ -20,5 +20,5 @@ class Solution:
             if (leftover in dct): # if leftover is present
                 return [dct[leftover], i]
             dct[ele] = i # add the index to the hashmap
-        return false
+        return [0, 0]
         
