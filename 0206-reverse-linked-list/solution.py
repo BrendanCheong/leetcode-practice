@@ -16,16 +16,19 @@ class Solution:
         # return reverseListRecursive(head, None)
 
         def reverseListIterative(head: Optional[ListNode]) -> Optional[ListNode]:
-            prev = None
-            curr = head
-
+        # start off with none and head node
+            prev, curr = None, head
             while curr:
                 next_node = curr.next
                 curr.next = prev
-
+                
+                # move the prev first, since we need to make the curr point to
+                # the prev
                 prev = curr
                 curr = next_node
             return prev
+    
+            
         return reverseListIterative(head)
 
 
