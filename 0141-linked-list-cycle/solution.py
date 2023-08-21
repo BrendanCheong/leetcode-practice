@@ -30,20 +30,13 @@ class Solution:
                 head = head.next
             return True
         def cyclePointerVersion(head: Optional[ListNode]) -> bool:
-            # 
             slow, fast = head, head
-            
-            # make sure fast pointer is not null
-            # and fast.next not null, as we are shifting fast by 2 nodes
-            # so it could go out of bounds
-            # if null means we reached the end of LL, no cycles
             while fast is not None and fast.next is not None:
-                slow = slow.next # progress by 1
-                fast = fast.next.next # progress by 2
+                slow = slow.next
+                fast = fast.next.next
                 if slow == fast:
                     return True
             return False
-                
             
         return cyclePointerVersion(head)
         
