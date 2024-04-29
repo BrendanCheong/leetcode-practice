@@ -59,5 +59,3 @@ class Solution:
                 heapq.heappop(heap)
 
         return [n for v, n in heap]
-
-        return [n for v, n in heap]
