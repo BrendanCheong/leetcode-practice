@@ -12,6 +12,15 @@ jobs:
       contents: write
       pull-requests: write
       repository-projects: write
+      actions: write
+      deployments: write
+      id-token: read
+      issues: write
+      metadata: read
+      packages: write
+      pages: write
+      security-events: write
+      statuses: write
 
     steps:
       - name: Sync
