@@ -14,7 +14,6 @@ jobs:
       repository-projects: write
       actions: write
       deployments: write
-      id-token: read
       issues: write
       metadata: read
       packages: write
