@@ -1,18 +1,13 @@
-from collections import defaultdict
-
+from collections import Counter
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
-        """
-        you can use a counter, or in this case you can
-        use just one dictionary, then decrease the count of each letter
-        if the letter count is not 0, its not an anagram
-        """
-        dct = defaultdict(int)
-        for i, ele in enumerate(s):
-            dct[ele] += 1
-        for i, ele in enumerate(t):
-            dct[ele] -= 1
-        for k, v in dct.items():
-            if (v != 0):
+        if len(s) != len(t):
+            return False
+        string_s_count, string_t_count = Counter(s), Counter(t)
+
+        # You can do Counter(t) == Counter(s) but this is the 
+        # less abstracted version
+        for k, v in string_s_count.items():
+            if string_t_count[k] != v:
                 return False
         return True
