@@ -1,31 +1,46 @@
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
-        left = 0
-        right = len(nums) - 1
-        
-        while (left <= right):
-            mid = (left + right) // 2
-            
-            if (nums[mid] == target):
+        """
+        We can essentially split the array into left and right sorted array
+        By checking the numbers between the middle value and the left and right pointers.
+
+        For ex: If the values between left and mid are 4,5,6,7 -> it shows that left is less than mid value
+        meaning a left sorted array.
+        We keep doing this until we find our target, and where out left and right sorted arrays eventually
+        become small enough to find the answer
+
+        Then we can binary search within this sub-array accordingly
+
+        Time: O(log n)
+        Space: O(1)
+        """
+        left, right = 0, len(nums) - 1
+
+        while left <= right:
+            mid = left + ((right - left)) // 2
+            if nums[mid] == target:
                 return mid
-            
-            # are we in the left sorted portion?
-            # if the middle value is greater than the leftmost value?
-            # if so, left to mid are increasing numbers
-            if (nums[left] <= nums[mid]):
-                if (target > nums[mid] or target < nums[left]):
-                    # if the target is smaller than leftmost, I cannot be in the leftmost due to increasing numbers
-                    # if the target is bigger than middle, I cannot be left most, since left of middle are smaller numbers
-                    # go right
-                    left = mid + 1
-                else:
-                    # go left
-                    right = mid - 1
-            else: # 5, 6, 0, <1>, 2, 3, 4
-                if (target < nums[mid] or target > nums[right]):
-                    # go left
+            # If left is less than mid
+            # it means we are in the left sorted array
+            if nums[left] <= nums[mid]:
+                # Is the target in this left sorted array?
+                # if so we must bring the right pointer to the left
+                if nums[left] <= target < nums[mid]:
                     right = mid - 1
                 else:
-                    # go left
                     left = mid + 1
-        return -1 # if cannot be found, exit program
+
+            # else we are in the right sorted array
+            else:
+                # Is the target in the right sorted array?
+                # if so we must bring the left pointer right
+                if nums[mid] < target <= nums[right]:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+
+        # if no result
+        return -1
+
+                
+        
