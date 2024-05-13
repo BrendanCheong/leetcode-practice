@@ -1,22 +1,31 @@
-import heapq
+from heapq import heappop, heappush, heapify
+
 class KthLargest:
-    """
-    The Binary Heap is like a self sorting list
-    Each Operation is in O(log n)
-    the idea is simple, we pop until the k == len(heap)
-    so the time complexity is: 
-    """
     def __init__(self, k: int, nums: List[int]):
-        self.k = k;
-        self.nums = nums[:]
-        heapq.heapify(self.nums) #O(N) time, if we only heapify half the elements
+        """
+        Typical heap qns. We have to rebalance the heap initially or when adding. In this case
+        we rebalance when initialised but you could also rebalance to kth element in the 'add' function
+
+        Time: O(n * k (log n))
+        Space: O(n)
+        """
+        self.min_heap = nums
+        self.k = k
+        heapify(self.min_heap)
+
+        # given k, remove elements from min heap until we reach
+        # the desired k elements. The top of heap will be kth largest element
+        # Makes sense as we are sort of counting backwards from a sorted list.
+        # since its a min heap. If it was a max heap its len(nums) - k
+        while k < len(self.min_heap):
+            heappop(self.min_heap)
 
     def add(self, val: int) -> int:
-        heapq.heappush(self.nums, val) #O(log k)
-        while len(self.nums) != self.k: # each operation is O(log k), we do this O(N-k) times
-            heapq.heappop(self.nums) # remove all the small numbers, that means from a sorted list, remove until we get the kth largest element
-        return self.nums[0] # take the top of the heap
-        
+        heappush(self.min_heap, val)
+        if len(self.min_heap) > self.k:
+            heappop(self.min_heap)
+
+        return self.min_heap[0]
         
 
 
