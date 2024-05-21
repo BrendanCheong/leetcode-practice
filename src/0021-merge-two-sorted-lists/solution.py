@@ -1,48 +1,40 @@
 # Definition for singly-linked list.
-class ListNode:
-    def __init__(self, val: int = 0, next: ListNode = None) -> None:
-        self.val: int = val
-        self.next: ListNode = next
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
-        """
-        Merging 2 sorted arrays uses the 2 pointer technique
-        Have a pointer at the start of each list. If one pointer is less than the other,
-        choose the less than one and increment that pointer, while the bigger pointer remains the same
-        if equal, choose one or the other
-        if one of the nodes are empty, choose the non-emty one, if both empty choose either
-        """
-        # if not list1 or not list2:
-        #     return list1 or list2
-        # elif list1.val <= list2.val:
-        #     list1.next = self.mergeTwoLists(list1.next, list2)
-        #     return list1
-        # elif list2.val <= list1.val:
-        #     list2.next = self.mergeTwoLists(list1, list2.next)
-        #     return list2
-        def iterative(list1: Optional[ListNode], list2: Optional[ListNode]):
-            prehead = ListNode(-1)
-            prev = prehead
-            
-            while list1 and list2:
-                if list1.val <= list2.val:
-                    prev.next = list1
-                    list1 = list1.next
-                elif list2.val <= list1.val:
-                    prev.next = list2
-                    list2 = list2.next
-                prev = prev.next
-                
-            prev.next = list1 if list1 is not None else list2
-            
-            return prehead.next
-        return iterative(list1, list2)
-                    
-            
+        dummy = ListNode()
+        node = dummy
+        while list1 and list2:
+            if list1.val < list2.val:
+                node.next = list1
+                list1 = list1.next
+            else:
+                node.next = list2
+                list2 = list2.next
+            node = node.next
+        # After the loop, if there are remaining nodes in either list1 or list2,
+        # we append them to the end of the merged list.
+        node.next = list1 or list2
+
+        # Return the head of the merged list
+        return dummy.next
+
+    def mergeListRecursive(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        # base case
+        if not list1 or not list2:
+            # return the list which still has remaining nodes
+            return list1 if list1 else list2
         
-        
-        
-        
-        
-        
-        
+        # merging if condition
+        if list1.val < list2.val:
+            # Move the list1 pointer until its no longer small
+            list1.next = self.mergeListRecursive(list1.next, list2)
+            return list1
+        else:
+            # Move the list2 pointer until its no longer small
+            list2.next = self.mergeListRecursive(list1, list2.next)
+            return list2
+
