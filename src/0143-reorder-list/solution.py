@@ -22,38 +22,22 @@ class Solution:
         Time: O(n)
         Space: O(1)
         """
-        # Edge case
         if not head:
             return head
-
-        # 1. Slow and fast pointer to find the middle, fast will iterate until we hit the end
-        # slow will be the middle node
-        slow, fast = head, head.next
+        slow = fast = head
+        
         while fast and fast.next:
             slow = slow.next
-            fast = fast.next.next
-        
-        # 2. Reverse the second list
-        # We should start reversing from the node after the middle (slow.next).
-        prev, curr = None, slow.next
-        # separate the first half from the second half before reversing, which could lead to cycles in the list.
-        slow.next = None
+            fast = fast.next.next 
+        prev, curr = None, slow
+
         while curr:
-            temp = curr.next
-            curr.next = prev
-            prev = curr
-            curr = temp
-
-        # 3. merge the 2 lists now
-        # the prev pointer is head of the second list now, note that curr = None
+            curr.next, prev, curr = prev, curr, curr.next     
         first, second = head, prev
-        while second:
-            tmp1, tmp2 = first.next, second.next
-            first.next = second
-            second.next = tmp1
-            # Move on to the next set of pointers
-            first, second = tmp1, tmp2
 
+        while second.next:
+            first.next, first = second, first.next
+            second.next, second = first, second.next
 
 
             
