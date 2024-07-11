@@ -1,42 +1,58 @@
 # Definition for singly-linked list.
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-#         def index(node: Optional[ListNode]):
-#             if not node:
-#                 return 0
-#             i = index(node.next) + 1
-#             if i > n:
-#                 # now we recreate the entire LL starting from the head, while we skip the correct node
-#                 node.next.val = node.val 
-#             return i # this is the node infront of the one we must remove
-#         index(head) # start mutation of the LL
-#         return head.next # we skip the correct node by one place
         """
-        2 pointer solution
-        we will have one pointer on the head, and one on the head
-        move the pointer on the head by n, then stop
-        then, move the other head pointer by len - n, which is found by moving the first pointer until it reaches None
+        The idea is this, have a ruler of nth length start from the head of the list
+        Now move the rule, such that the end of this ruler is at the end of the list
+        Notice that the start of the ruler is now nth node from the end of the list.
+        So we must delete that node
+
+        Time: O(n)
+        Space: O(1)
         """
-        dummy, right = ListNode(0, head), head
-        left = dummy
-
-        # 1. progress the right pointer until it reaches then end, we want len - n
-        while n > 0:
-            right = right.next
-            n -= 1
-
-        #2. next, progress the left pointer and the right. When the right is null, it means we reached len - n length
-        while right:
-            right = right.next
-            left = left.next
-
-        #3. now that the left pointer is on the correct node, we can delete that node
-        left.next = left.next.next
-
-        return dummy.next
+        # Edge case: if the list is empty or has only one node
+        if not head:
+            return head
+        if not head.next:
+            return None
         
+        # 1. move the ruler until we find nth node from start
+        # pin is the nth node from the start of the list
+        # so like a ruler, if we move the ruler to the end of the list
+        # the start of the ruler would now be nth node from end of list
+        pin, end, curr, count = None, None, head, 0
+        while curr:
+            count += 1
+            if count == n:
+                # pin is the end of the ruler
+                pin = curr
+                end = head
+            curr = curr.next
         
+        # Special case: if we need to remove the first node
+        # Means the node to remove is the head node
+        if not pin:
+            return head.next
+        
+        # 2. We move the ruler to the end of the list, so the start of the ruler
+        # is now the node we want to remove is the "end" node
+        prev = None
+        while pin.next:
+            prev = end
+            end = end.next
+            pin = pin.next
+        
+        # 3. Remove the nth node
+        # its still possible for the node to be removed to be the head node
+        # basically the "ruler" is already the full width of the list
+        # "end" is the node to be removed, prev is the node behind the node we want to remove
+        if prev:
+            prev.next = end.next
+        else:
+            head = head.next
+        
+        return head
