@@ -1,25 +1,22 @@
 class Solution:
-    def __init__(self):
-        self.cache = {1: 1, 2: 2}
-
     def climbStairs(self, n: int) -> int:
         """
-        O(n) time with caching, in this DP we start from the bottom aka the end result, and we have either go step down 1 or down 2 until we hit the result.
+        This is a DP question, as it requires optimising the recursion tree.
+        The decision we can make is, we can make the left subtree = n - 1 and the right
+        subtree = n - 2.
 
-        DP is just a recursion tree with caching
+        We can either do this using 
+        1. 1D DP - memoization with a hashmap (top-down DP), 
+        2. 1D DP - bottom-up approach with 2 values or a small array
         """
-        if n not in self.cache:
-            self.cache[n] = self.climbStairs(n - 1) + self.climbStairs(n - 2)
-        return self.cache[n] # eventually this will be the root of the tree
-    
-    # def climbStairs(self, n: int) -> int:
-    #     one, two = 1, 1
-    #     for i in range(n - 1):
-    #         temp = one
-    #         one += two
-    #         two = temp
-    #     return one
-
-            
-        
-        
+        if n < 2:
+            return 1
+        else:
+            dp = [1, 1]
+            i = 2
+            while i <= n:
+                next_val = dp[1] + dp[0]
+                dp[0] = dp[1]
+                dp[1] = next_val
+                i += 1
+            return dp[1]
