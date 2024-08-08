@@ -7,21 +7,25 @@
 class Solution:
     def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
         """
-        left -> right -> root
-        but using stack we do in reverse order
+        Post-order iteratively requires 2 stacks. One stack to know which we visited
+        and one stack to know which one we went through. So postorder is left-right-middle
         """
-        visited, stack = set(), []
+        stack, visit = [root], [False]
         res = []
-        stack.append(root)
-
         while stack:
-            node = stack.pop()
-            if node and node in visited:
-                # we need to add out visited nodes to the answer somewhere
-                res.append(node.val) 
-            elif node:
-                stack.append(node)
-                visited.add(node)
-                stack.append(node.right)
-                stack.append(node.left)
+            curr, visited = stack.pop(), visit.pop()
+            if curr:
+                # because its a stack, we have to do the reverse of left-right-middle
+                # we do middle-right-left, middle being we add the middle val to the res
+                if visited:
+                    res.append(curr.val)
+                else:
+                    stack.append(curr)
+                    visit.append(True)
+                    if curr.right:
+                        stack.append(curr.right)
+                        visit.append(False)
+                    if curr.left:
+                        stack.append(curr.left)
+                        visit.append(False)
         return res
