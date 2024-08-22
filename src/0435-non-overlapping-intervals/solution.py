@@ -1,31 +1,33 @@
-#link: https://leetcode.com/problems/non-overlapping-intervals/
-
-from typing import List
-
 class Solution:
     def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
         """
-        O(n log n) time, we always need to sort first
-        """
-        START, END = 0, -1 # start and end of an array is 0, and -1
-        intervals = sorted(intervals, key=lambda int: int[START]) # sort by start time
-        res, previous_int = 0, None
-        for i, current_int in enumerate(intervals):
-            if (i == 0):
-                previous_int = current_int
-            elif (current_int[START] >= previous_int[END]):
-                previous_int = current_int
-            else:
-                # you can merge the intervals if there is overlap
-                res += 1
-                previous_int = [max(current_int[START], previous_int[START]), min(current_int[END], previous_int[END])]
-        return res
+        Basically, we can either sort by start time or end time. Lets say
+        we sort by start time.
 
-# test cases
-s = Solution()
-print(s.eraseOverlapIntervals([[1,2],[2,3],[3,4],[1,3]]))
-assert s.eraseOverlapIntervals([[1,2],[2,3],[3,4],[1,3]]) == 1
-print(s.eraseOverlapIntervals([[1,2],[1,2],[1,2]]))
-assert s.eraseOverlapIntervals([[1,2],[1,2],[1,2]]) == 2
-print(s.eraseOverlapIntervals([[1,2],[2,3]]))
-assert s.eraseOverlapIntervals([[1,2],[2,3]]) == 0
+        The interval to remove if overlapping is the interval that has the
+        biggest/latest end time. This is because if we remove
+        the earlier end time we will have to still remove another interval
+        Like:
+        [1, 3], [2, 5], [4, 6]
+        if I remove (1, 3), I still have to remove (2, 5).
+        So just remove (2, 5)
+
+        Removal based on end time
+        """
+        intervals.sort(key=lambda x: x[0])
+        curr_end = intervals[0][-1]
+        removed_count = 0
+        for i in range(1, len(intervals)):
+            # Check if intervals do not merge
+            start_time, end_time = intervals[i][0], intervals[i][-1]
+            if start_time >= curr_end:
+                # Update the most recent end time
+                curr_end = end_time
+            else:
+                # Here we have to merge
+                removed_count += 1
+                # only select the smallest end time, removing the biggest end time
+                curr_end = min(end_time, curr_end)
+        return removed_count
+
+
