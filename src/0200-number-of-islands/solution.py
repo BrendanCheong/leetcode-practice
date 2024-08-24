@@ -6,39 +6,37 @@ class Solution:
         and land pieces visited. We do not do BFS or DFS on the same piece of land
         we have visited.
 
-        Time: O(NM(N + M)) if checkered board grid
+        Time: O(N * M) visit every cell as all cells are land
+        Space: O(N * M) all cells are land
         """
+        rows, cols = len(grid), len(grid[0])
         # 0. Edge case
-        if not grid or not grid[0]:
+        if not rows or not cols:
             return 0
-
-        islands = 0
-        visited = set()
-        n, m = len(grid), len(grid[0])
-        def dfs(rows: int, cols: int):
-            # 1. Base case
-            if (
-                # check visited
-                (rows, cols) in visited or
-                # check out of bounds
-                rows not in range(n) or
-                cols not in range(m) or
-                # check obstruction
-                grid[rows][cols] == "0"
-            ):
-                # do not progress if we face water
-                return
-            
-            # 2. Visit the neighbors
-            visited.add((rows, cols))
-            directions = ((0, 1), (1, 0), (0, -1), (-1, 0))
-            for dr, dc in directions:
-                dfs(rows + dr, cols + dc)
         
-        # 3. For each piece of land we do the DFS or BFS algo
-        for r in range(n):
-            for c in range(m):
-                if (r, c) not in visited and grid[r][c] == "1":
-                    islands += 1
+        visited = set()
+        directions = [(1, 0), (0, 1), (0, -1), (-1, 0)]
+        res = 0
+
+        def dfs(r: int, c: int) -> None:
+            # Base case exit condition
+            if (
+                (r, c) in visited or
+                r not in range(rows) or
+                c not in range(cols) or
+                grid[r][c] == '0'
+            ):
+                return
+            # Visit all directions
+            visited.add((r, c))
+            for dr, dc in directions:
+                dfs(r + dr, c + dc)
+        
+        # For each cell, run dfs to create the island on land
+        # Do not run on already created islands
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == '1' and (r, c) not in visited:
+                    res += 1
                     dfs(r, c)
-        return islands
+        return res
