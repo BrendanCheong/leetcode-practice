@@ -3,26 +3,45 @@ from functools import cache
 class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
         """
-        Top down approach
-        Time: O(n^2)
-        Space: O(n)
-        """
-        @cache
-        def dp(start: int, current_amount: int):
-            # Base case or Bounds of the problem
-            # we cant go beyond coins array
-            if start == len(coins):
-                # this means that, found our answer, or we need to back up the recursion tree for our answer (dead-end)
-                return 1 if current_amount == 0 else 0
+        Bottom-up approach
 
-            # Decision 1: When do we take a coin? when we cant reach the amount
-            take = 0
-            if coins[start] <= current_amount:
-                take = dp(start, current_amount - coins[start])
-            
-            # Decision 2: we skip this coin, as taking this coin will not make us closer to amount needed
-            skip = dp(start + 1, current_amount)
-            
-            # end case, we take the sum of our decisions
-            return skip + take
-        return dp(0, amount)
+        Bounds:
+            i: [0, len(coins)]
+            x: [0, amount]
+        
+        Order:
+            general term i, x, requires general term take and skip.
+
+            Term i, x:
+                take: i, x - coins[i]
+                    - since 'i' does not change
+                    - x-coins[i] before x
+                    - since coins[i] > 0, x - coins[i] < x
+                    - small before big
+                    - 0 before amount
+
+                skip: i + 1, x
+                    - since 'x' does not change
+                    - i+1 before i
+                    - since i+1 > i
+                    - big before small
+                    - biggest value of i is len(coins), smallest is 0 (see the bounds above)
+                    - len(coins) before 0
+
+                order of for loops dont matter here, since its eiter take first or skip first
+
+            General term: take + skip
+
+            1. We can just replace return statements with dp[i][x], since our recursion call was func_dp(i, x)
+            2. base case: i == len(coins): 1 if x == 0 else 0, we can just make default value 0. Then if x == 0 when len(coins)
+            is i, then the answer is dp[len(coins)][0] = 1
+        """
+
+        dp = [1] + [0] * amount
+
+        for c in coins:
+            for x in range(c, amount + 1):
+                dp[x] += dp[x - c]
+        
+        return dp[amount]
+
