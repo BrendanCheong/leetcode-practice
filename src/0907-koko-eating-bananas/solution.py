@@ -1,38 +1,33 @@
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
         """
-        The intuition in this case is that the number 'k' is actually a number between
-        k = 1 and max value of piles. Why? k is eating speed, k = 0 doesn't make sense cuz we eat no bananas
-        if k was the largest value of the piles, we could everything in 1 hour!
-        But hey, we want the minimum 'k', so now we have an lower and upper bound
-        1 <= k <= max_pile
+        Clearly we are searching for what level of k is ideal.
+        So its a binary search, so we need to find the lower and upper bounds
+        k = 0 doesn't make sense, we want to eat bananas
+        lower: 1
+        upper: max(piles)
 
-        Sounds familiar? its a binary search! We just keep finding the hours it took to eat all the bananas
-        and close to 'h', by testing the values of k within 1 <= k <= max_pile.
-        Instead of testing all of k, we just binary search to get close to 'h'
+        basically, 'k' must be <= h, and as small as possible
 
-        Time: O(n * log(max_piles))
-        Space: O(1)
+        Thats the first part. The second part is, given k, how do we know if the k is the number we want?
+        compare the time taken to eat all bananas with h hours
         """
-        left, right = 1, max(piles)
-        res = right
-        while left <= right:
-            accumulated_time = 0
-            k = left + ((right - left)) // 2
-            # given k, lets the total possible hours
-            for banana in piles:
-                # We round up in this case
-                # if we have 3 bananas and k = 4, we take 1 hour, so 3/4 round up is 1
-                accumulated_time += math.ceil(float(banana) / k)
-            if accumulated_time <= h:
-                # we are too fast, go slower
-                # We do result = k, because we have technically found a solution
-                # but its not the minimum k, so we keep searching
+        lower, upper = 1, max(piles)
+        res = upper
+        while lower <= upper:
+            k = (upper + lower) // 2
+            total_time = 0
+            for pile in piles:
+                # time to eat is pile/eating_rate, eating rate is k. We math.ceil to round up, cuz lets say its 3/4. Means answer is 1 hour
+                total_time += math.ceil(float(pile) / k)
+            if total_time <= h:
+                # less than equal, means we found a valid k, but could we go smaller? We dont know until we try!
                 res = k
-                right = k - 1
+                # lets aim for small times
+                upper = k - 1
             else:
-                # we are too slow, go faster
-                left = k + 1
+                # we are too small, lets aim for bigger times
+                lower = k + 1
         return res
 
         
