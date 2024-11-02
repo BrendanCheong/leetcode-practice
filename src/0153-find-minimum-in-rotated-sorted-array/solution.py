@@ -1,42 +1,27 @@
 class Solution:
     def findMin(self, nums: List[int]) -> int:
         """
-        In this case, whenever we rotate, we will always put larger values to
-        the left of the array (thats what the qns describes). Since there is always
-        at least one rotation, we can conclude that one part of the array contains sorted
-        bigger numbers, the other sorted smaller numbers.
+        The trick here is that the numbers are only rotated to the right.
+        Ex: 6, 7, 0, 1, 2, 4, 5. Here we rotated 2 times! notice that if we only look at the right most number compare with middle number,
+        we can tell that we rotated such that big numbers are on the left. This is one kind of rotation
 
-        If we're in the so called smaller numbers, we probably already found our answer,
-        but we should check the other sorted portion of the array just in case
-        Elsewise, if we're in the big sorted, check the smaller sorted numbers.
+        Ex: 0, 1, 2, 4, 5, 6 ,7. Here we rotated 0 or 7 times, where all the numbers made a full turn.
+        Look at the right most number, now we can tell big numbers are on the right.
 
-        The array is not rotated at all, meaning the smallest element is at the beginning.
+        Ex: 4, 5, 6, 7, 0, 1, 2. 
 
-        The array is rotated, which creates a pivot point where the pattern changes.
-
-        nums[mid] >= nums[left]
-            - search right
-        nums[mid] < nums[right]
-            - search left
-
-        Time: O(log n)
-        Space: O(1)
+        Theres only 2 kinds of states, full rotation or partial rotation. And partial rotation always has big numbers on the left
         """
-        left, right, current_min = 0, len(nums) - 1, float("inf")
+        left, right, curr_min = 0, len(nums) - 1, float("inf")
         while left <= right:
-            middle = left + ((right - left) // 2)
-            current_min = min(current_min, nums[middle])
-
-            # The left has the minimum
-            # Array is likely not rotated, so smallest starts from beginning
-            if nums[right] > nums[middle]:
-                right = middle - 1
-
-            # The right has the minimum
-            # Array is likely rotated, so smallest starts at the right far end
+            mid = (left + right) // 2
+            curr_min = min(curr_min, nums[mid])
+            # check the rightmost number
+            if nums[mid] > nums[right]:
+                # means big numbers are on left, small numbers are on right
+                left = mid + 1
             else:
-                left = middle + 1
-
-        return current_min
-
+                # means small numbers are on left, big numbers on right
+                right = mid - 1
+        return curr_min
 
